@@ -1,0 +1,63 @@
+{
+  "productos": [
+    {
+      "nombre_oficial": "Espresso doble",
+      "alias": ["espresso", "espresso doble", "cafe solo"],
+      "precio": 50
+    },
+    {
+      "nombre_oficial": "Café con leche",
+      "alias": ["cafe con leche", "latte"],
+      "precio": 50
+    },
+    {
+      "nombre_oficial": "Flat White con leche de almendra",
+      "alias": ["flat white", "flat white almendra"],
+      "precio": 60
+    },
+    {
+      "nombre_oficial": "Capuchino",
+      "alias": ["capuchino"],
+      "precio": 50
+    },
+    {
+      "nombre_oficial": "Licuado energizante",
+      "alias": ["licuado", "licuado energizante"],
+      "precio": 55
+    },
+    {
+      "nombre_oficial": "Desayuno \"La Semilla\"",
+      "alias": ["desayuno la semilla", "desayuno completo"],
+      "precio": 95
+    },
+    {
+      "nombre_oficial": "Tostado de jamón y queso artesanal",
+      "alias": ["tostado", "tostado de jamon y queso"],
+      "precio": 70
+    },
+    {
+      "nombre_oficial": "Sándwich Caprese en pan de masa madre",
+      "alias": ["sandwich caprese", "caprese"],
+      "precio": 85
+    },
+    {
+      "nombre_oficial": "Medialunas de manteca",
+      "alias": ["medialuna", "medialunas", "medialuna de manteca"],
+      "precio": 30
+    },{
+      "nombre_oficial": "Medialunas de grasa",
+      "alias": ["medialuna", "medialunas", "medialuna de grasa"],
+      "precio": 30
+    },
+    {
+      "nombre_oficial": "Brownie vegano",
+      "alias": ["brownie", "brownie vegano"],
+      "precio": 50
+    },
+    {
+      "nombre_oficial": "Croissant de chocolate",
+      "alias": ["croissant", "croissant de chocolate"],
+      "precio": 45
+    }
+  ]
+}

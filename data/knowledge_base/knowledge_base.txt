@@ -1,0 +1,78 @@
+Ficha Técnica del La Semilla Café
+
+Información General del Local
+-Nombre del local: La Semilla Café
+-Descripción breve del negocio: Cafetería de especialidad con enfoque en bebidas artesanales, repostería casera y eventos culturales locales.
+-Misión: Brindar experiencias memorables a través del café de alta calidad, un servicio humano y un espacio inclusivo.
+-Visión: Ser la referencia cafetera y cultural del barrio, impulsando el comercio local y el arte independiente.
+
+Ubicación
+-Dirección completa: Calle Libertad 214, Colonia Roma Norte, Ciudad de México.
+-Puntos de referencia cercanos: A una cuadra del Jardín Pushkin, frente al restaurante "La Casa Azul".
+
+Horarios de atención:
+-Lunes a Viernes: 7:30 a.m. – 9:00 p.m.
+-Sábados y Domingos: 9:00 a.m. – 7:00 p.m.
+
+Equipo de Trabajo
+-Ana Rivera: Fundadora y barista principal. Emprendedora cafetera con 12 años de experiencia. Certificada en catación por SCA.
+-Luis Andrade: Chef pastelero. Especialista en repostería vegana y sin gluten. Formado en Le Cordon Bleu.
+-Sofía López: Administración y redes sociales. Comunicadora digital con enfoque en marketing gastronómico.
+
+Productos y Servicios
+Productos destacados:
+- Espresso doble: $50 pesos
+- Flat White con leche de almendra: $60 pesos
+- Cafe con leche: $50 pesos
+- Capuchino: $50 pesos
+- Brownie vegano (unidad): $50 pesos
+- Desayuno "La Semilla" (bebida + pan + fruta): $95 pesos
+- Tostado de jamón y queso artesanal: $70 pesos
+- Licuado energizante (frutos rojos, banana y espinaca): $55 pesos
+- Medialunas de grasa (unidad): $30 pesos
+- Medialunas de manteca (unidad): $30 pesos
+- Sándwich Caprese en pan de masa madre: $85 pesos
+- Croissant de chocolate: $45 pesos
+- Brownie de almendras: $50 pesos
+
+Servicios:
+- WiFi libre con consumo mínimo.
+- Talleres de arte y café cada viernes.
+- Renta de espacio para eventos pequeños.
+- Servicio de catering para reuniones y eventos.
+- Entregas a domicilio con Uber Eats y pedidos directos por WhatsApp.
+
+Promociones actuales:
+- Miércoles de bebida gratis en la compra de 2 pasteles.
+- 15% de descuento mostrando este mensaje de WhatsApp.
+- Promo Estudiante: 10% de descuento en todos los productos presentando credencial.
+
+Formas de pago:
+- En el local, aceptamos efectivo y tarjeta de crédito o débito.
+- Por WhatsApp, con Mercado Pago.
+
+Contacto
+- WhatsApp: +52 55 9876 5432
+- Correo electrónico: hola@lasemillacafe.com
+- Instagram: @lasemillacafe
+- Facebook: facebook.com/lasemillacafe
+
+Consultas Frecuentes
+Ejemplo de consulta 1: ¿Cuáles son los horarios de atención?
+Respuesta: De lunes a viernes de 7:30 a.m. a 9:00 p.m., fines de semana de 9:00 a.m. a 7:00 p.m.
+
+Ejemplo de consulta 2: ¿Dónde se encuentra el local?
+Respuesta: En Calle Libertad 214, Col. Roma Norte. A una cuadra del Jardín Pushkin.
+
+Ejemplo de consulta 3: ¿Qué tipo de productos ofrecen?
+Respuesta: Café de especialidad, repostería vegana, desayunos ligeros y bebidas artesanales.
+
+Ejemplo de consulta 4: ¿Hacen entregas a domicilio?
+Respuesta: Sí, trabajamos con Uber Eats y pedidos directos por WhatsApp en zona Roma/Condesa.
+
+Tips para el chatbot (uso interno):
+- Palabras como "horario", "abren", "cierran" → usar sección 2.
+- Consultas tipo "qué venden", "ofrecen", "productos" → usar sección 4.
+- "¿Dónde están?", "ubicación" → sección 2.
+- "¿Teléfono?", "¿correo?", "¿redes?" → sección 6.
+- "¿Promoción?", "¿descuento?" → sección 4.
