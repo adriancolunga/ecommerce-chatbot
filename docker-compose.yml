@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  whatsapp-assistant:
+    build: .
+    container_name: whatsapp_assistant_app
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000
+
+  ngrok:
+    image: ngrok/ngrok:latest
+    container_name: ngrok_service
+    restart: always
+    ports:
+      - "4040:4040"
+    depends_on:
+      - whatsapp-assistant
+    environment:
+      - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
+    command: http whatsapp-assistant:8000
+
+# Para una futura implementación con una base de datos de vectores dedicada:
+#
+#   qdrant:
+#     image: qdrant/qdrant:latest
+#     container_name: qdrant_db
+#     restart: always
+#     ports:
+#       - "6333:6333"
+#       - "6334:6334"
+#     volumes:
+#       - ./qdrant_data:/qdrant/storage
+#
+# Y el servicio de la app dependería de él:
+#   whatsapp-assistant:
+#     ...
+#     depends_on:
+#       - qdrant

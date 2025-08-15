@@ -1,0 +1,24 @@
+# Archivos de entorno - ¡MUY IMPORTANTE!
+.env
+
+# Entornos virtuales
+/venv
+/env
+/.venv
+/.env
+
+# Archivos de caché de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Archivos de configuración del editor
+.vscode/
+.idea/
+
+# Archivos de sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de logs
+app.log
