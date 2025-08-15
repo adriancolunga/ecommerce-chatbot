@@ -23,7 +23,6 @@ class WhatsappAssistant:
         graph_input = {"messages": self.conversation_threads[user_id]}
         final_response = None
         for event in app.stream(graph_input):
-            # Captura tanto la respuesta final del nodo 'agent' como el evento '__end__'
             if "agent" in event:
                 final_response = event["agent"]["messages"][-1]
             elif "__end__" in event:
