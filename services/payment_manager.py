@@ -2,7 +2,6 @@ import os
 import logging
 import mercadopago
 
-# Cargar el Access Token de MercadoPago desde las variables de entorno
 MERCADOPAGO_ACCESS_TOKEN = os.getenv("MERCADOPAGO_ACCESS_TOKEN")
 
 sdk = None
@@ -32,11 +31,9 @@ def create_payment_link(cart_items: list, user_id: str) -> str | None:
         return None
 
     try:
-        # Crear la estructura de datos para la preferencia de pago
         preference_data = {
             "items": cart_items,
             "payer": {
-                # Podemos añadir más info del pagador si la tuviéramos
                 "name": user_id
             },
             "back_urls": {

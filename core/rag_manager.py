@@ -5,10 +5,8 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
 
-# Cargar las variables de entorno (necesario para la API Key de OpenAI)
 load_dotenv()
 
-# Constantes
 KNOWLEDGE_BASE_DIR = "data/knowledge_base"
 VECTOR_STORE_DIR = "data/chroma_db"
 
@@ -23,7 +21,6 @@ class RAGManager:
     def _load_documents(self):
         """Carga los documentos desde el directorio especificado."""
         print(f"Cargando documentos desde '{KNOWLEDGE_BASE_DIR}'...")
-        # Usamos un TextLoader para cada archivo para evitar problemas con metadatos
         loader = DirectoryLoader(KNOWLEDGE_BASE_DIR, glob="**/*.txt", loader_cls=TextLoader, loader_kwargs={"encoding": "utf-8"})
         return loader.load()
 
@@ -31,8 +28,8 @@ class RAGManager:
         """Divide los documentos en chunks más pequeños."""
         print("Dividiendo documentos en chunks...")
         text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=1000,  # Tamaño del chunk en caracteres
-            chunk_overlap=200, # Solapamiento entre chunks
+            chunk_size=1000,
+            chunk_overlap=200,
             length_function=len
         )
         return text_splitter.split_documents(documents)
@@ -50,7 +47,6 @@ class RAGManager:
         chunks = self._split_documents(documents)
         
         print("Creando y guardando el vector store con ChromaDB...")
-        # Chroma se encarga de la persistencia si le pasamos un directorio
         self.vector_store = Chroma.from_documents(
             documents=chunks, 
             embedding=self.embeddings_model,
@@ -84,14 +80,11 @@ class RAGManager:
         """Devuelve un retriever para realizar búsquedas."""
         if self.vector_store is None:
             raise ValueError("El vector store no ha sido cargado. Ejecuta load_vector_store() primero.")
-        # as_retriever() convierte nuestra base de datos en un objeto que LangChain puede usar para buscar
-        return self.vector_store.as_retriever(search_kwargs={"k": 3}) # k=3 -> devuelve los 3 chunks más relevantes
+        return self.vector_store.as_retriever(search_kwargs={"k": 3})
 
-# --- Bloque para ejecución directa (para crear el índice por primera vez) ---
 if __name__ == "__main__":
     print("Ejecutando el gestor de RAG para crear el índice inicial...")
     
-    # NOTA: Asegúrate de tener un archivo .env con tu OPENAI_API_KEY
     if not os.getenv("OPENAI_API_KEY"):
         print("Error: La variable de entorno OPENAI_API_KEY no está configurada.")
         print("Por favor, crea un archivo .env y añade tu clave de API de OpenAI.")

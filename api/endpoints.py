@@ -3,14 +3,11 @@ from fastapi import APIRouter, Form, Response
 from core.assistant import WhatsappAssistant
 from pydantic import BaseModel
 from services.whatsapp_client import send_message
-from core.tools import rag_manager # Importamos la instancia del RAG manager para recargarla
+from core.tools import rag_manager
 
 router = APIRouter()
-
-# Inicializamos el asistente. La nueva versión gestiona el estado internamente.
 assistant = WhatsappAssistant()
 
-# --- Pydantic Models ---
 class NodejsWebhookRequest(BaseModel):
     """Define la estructura del payload recibido desde el webhook de Node.js."""
     message: str
@@ -25,7 +22,6 @@ async def receive_webhook(From: str = Form(...), Body: str = Form(...)):
     user_message = Body.strip().lower()
 
     try:
-        # --- Manejo de Comandos Especiales ---
         if user_message == 'fin':
             assistant.clear_memory(From)
             send_message(to=From, body="✅ Memoria de conversación borrada. Puedes empezar de cero.")
@@ -41,12 +37,8 @@ async def receive_webhook(From: str = Form(...), Body: str = Form(...)):
                 send_message(to=From, body="❌ Error: No se pudo recargar la base de conocimientos.")
             return Response(status_code=204)
 
-        # --- Flujo de Conversación Normal con LangGraph ---
-        # El método get_response ahora invoca al grafo y devuelve la respuesta final.
         final_response = assistant.get_response(user_id=From, user_query=Body)
 
-        # El grafo y las herramientas se encargan de las acciones (enviar mensajes, etc.)
-        # Pero la respuesta final del LLM al usuario la enviamos desde aquí.
         if final_response:
             send_message(to=From, body=final_response)
 
@@ -55,9 +47,7 @@ async def receive_webhook(From: str = Form(...), Body: str = Form(...)):
         error_message = "Lo siento, ocurrió un error inesperado. Por favor, intenta de nuevo más tarde."
         send_message(to=From, body=error_message)
 
-    # Devolvemos una respuesta vacía a Twilio para confirmar la recepción.
     return Response(status_code=204)
-
 
 @router.post("/whatsapp_nodejs")
 async def receive_nodejs_webhook(request: NodejsWebhookRequest):
@@ -72,7 +62,6 @@ async def receive_nodejs_webhook(request: NodejsWebhookRequest):
     final_response_text = "Lo siento, ocurrió un error inesperado." # Respuesta por defecto
 
     try:
-        # --- Manejo de Comandos Especiales ---
         if user_message == 'fin':
             assistant.clear_memory(From)
             final_response_text = "✅ Memoria de conversación borrada. Puedes empezar de cero."
@@ -84,13 +73,10 @@ async def receive_nodejs_webhook(request: NodejsWebhookRequest):
             final_response_text = "✅ Base de conocimientos recargada con éxito." if success else "❌ Error: No se pudo recargar la base de conocimientos."
             return {"reply": final_response_text}
 
-        # --- Flujo de Conversación Normal con LangGraph ---
         final_response_text = assistant.get_response(user_id=From, user_query=Body)
 
     except Exception as e:
         logging.error(f"Ocurrió un error al procesar el mensaje de {From}: {e}", exc_info=True)
-        # La respuesta por defecto ya está asignada
 
-    # Devolvemos la respuesta al servidor de Node.js para que él la envíe.
     return {"reply": final_response_text or "No tengo una respuesta para eso en este momento."}
 

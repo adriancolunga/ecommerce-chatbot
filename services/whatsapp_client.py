@@ -4,17 +4,13 @@ import requests
 from twilio.rest import Client
 from twilio.base.exceptions import TwilioRestException
 
-# Cargar las credenciales desde las variables de entorno
 ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID")
 AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
 TWILIO_NUMBER = os.getenv("TWILIO_WHATSAPP_NUMBER")
 
-# --- Configuración del Proveedor de Mensajería ---
 MESSAGING_PROVIDER = os.getenv("MESSAGING_PROVIDER", "twilio").lower()
 NODEJS_SERVER_URL = os.getenv("NODEJS_SERVER_URL", "http://localhost:3000")
 
-# Inicializar el cliente de Twilio
-# Hacemos esto una vez cuando el módulo se carga para mayor eficiencia.
 try:
     if ACCOUNT_SID and AUTH_TOKEN:
         client = Client(ACCOUNT_SID, AUTH_TOKEN)
@@ -46,8 +42,6 @@ def send_message_via_twilio(to: str, body: str):
     """
     if not client or not TWILIO_NUMBER:
         logging.error(f"Intento de envío a {to} fallido: El cliente de Twilio o el número de origen no están configurados.")
-        # En un entorno real, no imprimiríamos el body, pero es útil para depuración.
-        logging.debug(f"Mensaje no enviado a {to}: {body}")
         return
 
     try:

@@ -16,8 +16,6 @@ carts = {}
 rag_manager = RAGManager()
 rag_manager.load_vector_store()
 
-# --- Funciones auxiliares ---
-
 def _get_product_price(item_name: str) -> int:
     """Busca el precio de un producto en products.json por su nombre o alias."""
     try:
@@ -34,12 +32,10 @@ def _get_product_price(item_name: str) -> int:
                     return product['precio']
         
         logging.warning(f"Producto '{item_name}' no encontrado en products.json")
-        return 0  # Retorna 0 si el producto no se encuentra
+        return 0
     except (FileNotFoundError, json.JSONDecodeError) as e:
         logging.error(f"Error al leer o procesar products.json: {e}")
         return 0
-
-# --- Tool Definitions ---
 
 @tool
 def get_knowledge_base_response(user_query: str) -> str:
@@ -50,10 +46,7 @@ def get_knowledge_base_response(user_query: str) -> str:
     logging.info(f"Ejecutando get_knowledge_base_response con la consulta: {user_query}")
     try:
         retriever = rag_manager.get_retriever()
-        # Invocamos al retriever para obtener los documentos relevantes
         relevant_docs = retriever.invoke(user_query)
-        
-        # Formateamos el contenido de los documentos en un solo string de contexto
         context = "\n\n---\n\n".join([doc.page_content for doc in relevant_docs])
         
         if not context:
@@ -78,13 +71,11 @@ def add_item_to_cart(user_id: str, item_name: str, quantity: int) -> str:
     if user_id not in carts:
         carts[user_id] = []
 
-    # Comprobar si el item ya está en el carrito para actualizar la cantidad
     for item in carts[user_id]:
         if item['item_name'].lower() == item_name.lower().strip():
             item['quantity'] += quantity
             return f"{quantity} x {item_name} más añadido(s). Ahora tienes {item['quantity']} en total."
 
-    # Si no está, añadirlo como nuevo item
     carts[user_id].append({"item_name": item_name, "quantity": quantity, "price": price})
     return f"{quantity} x {item_name} ha(n) sido añadido(s) a tu carrito."
 
@@ -130,7 +121,7 @@ def checkout(user_id: str) -> str:
     payment_link = create_payment_link(cart_items_for_payment, user_id)
     
     if payment_link:
-        carts.pop(user_id, None)  # Vaciar carrito
+        carts.pop(user_id, None)
         return f"Tu pedido está listo. Aquí tienes tu enlace de pago: {payment_link}"
     else:
         return "Tuvimos un problema al generar tu enlace de pago. Por favor, intenta de nuevo."
