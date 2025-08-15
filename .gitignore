@@ -1,5 +1,7 @@
-# Archivos de entorno - ¡MUY IMPORTANTE!
+docs
+next.md
 .env
+nodejs-component
 
 # Entornos virtuales
 /venv
