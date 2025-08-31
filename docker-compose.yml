@@ -11,7 +11,24 @@ services:
       - "8000:8000"
     volumes:
       - .:/app
+    depends_on:
+      redis:
+        condition: service_healthy
     command: uvicorn main:app --host 0.0.0.0 --port 8000
+
+  redis:
+    image: redis:alpine
+    container_name: redis_cache
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   ngrok:
     image: ngrok/ngrok:latest
@@ -23,4 +40,7 @@ services:
       - whatsapp-assistant
     environment:
       - NGROK_AUTHTOKEN=${NGROK_AUTHTOKEN}
-    command: http whatsapp-assistant:8000
+    command: ["http", "--log=stdout", "whatsapp-assistant:8000"]
+
+volumes:
+  redis_data:
