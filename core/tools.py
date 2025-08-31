@@ -1,18 +1,28 @@
 import logging
 import os
 import json
+import redis
 from langchain_core.tools import tool
 from core.rag_manager import RAGManager
 from services.payment_manager import create_payment_link
 from services.whatsapp_client import send_message
 
-# --- State Management --- 
-# Estas variables globales actuarán como nuestra base de datos en memoria para los carritos.
-# En una aplicación real, esto sería reemplazado por una base de datos como Redis o DynamoDB.
-carts = {}
+redis_client = redis.from_url(os.getenv("REDIS_URL", "redis://redis:6379"))
+
+def _get_cart(user_id: str) -> list:
+    """Recupera el carrito de un usuario desde Redis."""
+    cart_json = redis_client.get(f"cart:{user_id}")
+    return json.loads(cart_json) if cart_json else []
+
+def _save_cart(user_id: str, cart: list):
+    """Guarda el carrito de un usuario en Redis."""
+    redis_client.set(f"cart:{user_id}", json.dumps(cart))
+
+def _delete_cart(user_id: str):
+    """Elimina el carrito de un usuario de Redis."""
+    redis_client.delete(f"cart:{user_id}")
 
 # --- RAG Manager --- 
-# Inicializamos una única instancia para ser usada por la herramienta de consulta.
 rag_manager = RAGManager()
 rag_manager.load_vector_store()
 
@@ -68,15 +78,16 @@ def add_item_to_cart(user_id: str, item_name: str, quantity: int) -> str:
     if price == 0:
         return f"Lo siento, no encontré el producto '{item_name}'. ¿Podrías verificar el nombre e intentarlo de nuevo?"
 
-    if user_id not in carts:
-        carts[user_id] = []
+    cart = _get_cart(user_id)
 
-    for item in carts[user_id]:
+    for item in cart:
         if item['item_name'].lower() == item_name.lower().strip():
             item['quantity'] += quantity
+            _save_cart(user_id, cart)
             return f"{quantity} x {item_name} más añadido(s). Ahora tienes {item['quantity']} en total."
 
-    carts[user_id].append({"item_name": item_name, "quantity": quantity, "price": price})
+    cart.append({"item_name": item_name, "quantity": quantity, "price": price})
+    _save_cart(user_id, cart)
     return f"{quantity} x {item_name} ha(n) sido añadido(s) a tu carrito."
 
 @tool
@@ -85,7 +96,7 @@ def view_cart(user_id: str) -> str:
     Usa esta herramienta si el usuario pregunta qué hay en su carrito o cuál es el total hasta ahora.
     """
     logging.info(f"Mostrando carrito para {user_id}")
-    cart_items = carts.get(user_id, [])
+    cart_items = _get_cart(user_id)
     if not cart_items:
         return "Tu carrito está vacío."
 
@@ -106,7 +117,7 @@ def checkout(user_id: str) -> str:
     Usa esta herramienta SOLO cuando el usuario confirme explícitamente que quiere pagar o finalizar su pedido.
     """
     logging.info(f"Iniciando checkout para {user_id}")
-    cart_items = carts.get(user_id, [])
+    cart_items = _get_cart(user_id)
     if not cart_items:
         return "Tu carrito está vacío. No puedes finalizar un pedido sin productos."
 
@@ -121,7 +132,7 @@ def checkout(user_id: str) -> str:
     payment_link = create_payment_link(cart_items_for_payment, user_id)
     
     if payment_link:
-        carts.pop(user_id, None)
+        _delete_cart(user_id)
         return f"Tu pedido está listo. Aquí tienes tu enlace de pago: {payment_link}"
     else:
         return "Tuvimos un problema al generar tu enlace de pago. Por favor, intenta de nuevo."

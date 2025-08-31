@@ -36,11 +36,6 @@ def create_payment_link(cart_items: list, user_id: str) -> str | None:
             "payer": {
                 "name": user_id
             },
-            "back_urls": {
-                "success": "https://www.tu-tienda.com/pago_exitoso",
-                "failure": "https://www.tu-tienda.com/pago_fallido",
-                "pending": "https://www.tu-tienda.com/pago_pendiente"
-            },
             "auto_return": "approved", # Redirige automáticamente al cliente tras el pago
             "external_reference": f"pedido_{user_id}_{os.urandom(4).hex()}" # Referencia única para nuestro sistema
         }
