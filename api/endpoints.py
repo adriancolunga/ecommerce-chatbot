@@ -1,17 +1,11 @@
 import logging
 from fastapi import APIRouter, Form, Response
 from core.assistant import WhatsappAssistant
-from pydantic import BaseModel
 from services.whatsapp_client import send_message
 from core.tools import rag_manager
 
 router = APIRouter()
 assistant = WhatsappAssistant()
-
-class NodejsWebhookRequest(BaseModel):
-    """Define la estructura del payload recibido desde el webhook de Node.js."""
-    message: str
-    senderId: str
 
 @router.post("/webhook")
 async def receive_webhook(From: str = Form(...), Body: str = Form(...)):
@@ -48,35 +42,3 @@ async def receive_webhook(From: str = Form(...), Body: str = Form(...)):
         send_message(to=From, body=error_message)
 
     return Response(status_code=204)
-
-@router.post("/whatsapp_nodejs")
-async def receive_nodejs_webhook(request: NodejsWebhookRequest):
-    """
-    Endpoint que recibe los mensajes del webhook de Node.js, los procesa y devuelve una respuesta.
-    """
-    From = request.senderId
-    Body = request.message
-    logging.info(f"Mensaje de Node.js recibido de {From}: '{Body}'")
-    user_message = Body.strip().lower()
-
-    final_response_text = "Lo siento, ocurrió un error inesperado." # Respuesta por defecto
-
-    try:
-        if user_message == 'fin':
-            assistant.clear_memory(From)
-            final_response_text = "✅ Memoria de conversación borrada. Puedes empezar de cero."
-            return {"reply": final_response_text}
-
-        if user_message == 'recargar':
-            logging.info(f"Petición de recarga de knowledge base recibida de {From}.")
-            success = rag_manager.reload_vector_store()
-            final_response_text = "✅ Base de conocimientos recargada con éxito." if success else "❌ Error: No se pudo recargar la base de conocimientos."
-            return {"reply": final_response_text}
-
-        final_response_text = assistant.get_response(user_id=From, user_query=Body)
-
-    except Exception as e:
-        logging.error(f"Ocurrió un error al procesar el mensaje de {From}: {e}", exc_info=True)
-
-    return {"reply": final_response_text or "No tengo una respuesta para eso en este momento."}
-
